@@ -1,0 +1,64 @@
+{
+	"name": "My Dev Environment",
+	"build": {
+		"dockerfile": "Dockerfile-Dev"
+	},
+	"mounts": [
+		"type=volume,src=m2,target=/home/dev-user/.m2",
+		"type=bind,src=/var/run/docker.sock,target=/var/run/docker.sock"
+	],
+	"runArgs": [
+		"--hostname=devcontainer",
+		"--name=my-dev-environment",
+	],
+	"remoteUser": "dev-user",
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"terminal.integrated.profiles.linux": {
+					"bash": {
+						"path": "/bin/bash"
+					}
+				},
+				"terminal.integrated.defaultProfile.linux": "bash",
+				"java.configuration.runtimes": [
+					{
+						"default": true,
+						"name": "JavaSE-1.8",
+						"path": "/opt/jdk"
+					}
+				],
+				"java.jdt.ls.java.home": "/usr/lib/jvm/openjdk-17",
+				"spring-boot.ls.java.home": "/usr/lib/jvm/openjdk-17",
+				"files.exclude": {
+					".devcontainer": true,
+					".envrc": true,
+					".gitmodules": true,
+					".vscode": true
+				}
+			},
+			"extensions": [
+				"vscjava.vscode-java-pack",
+				"vscjava.vscode-maven",
+				"vscjava.vscode-java-debug",
+				"vscjava.vscode-java-dependency",
+				"vscjava.vscode-java-test",
+				"vscjava.vscode-spring-boot-dashboard",
+				"redhat.java",
+				"redhat.vscode-yaml",
+				"redhat.fabric8-analytics",
+				"mhutchie.git-graph",
+				"javaTest.java-test",
+				"Gruntfuggly.todo-tree",
+				"shardulm94.trailing-spaces",
+				"Vue.volar",
+				"viablelab.bracket-padder",
+				"Pivotal.vscode-boot-dev-pack"
+			]
+		}
+	},
+	"forwardPorts": [
+		8080,
+		2222
+	]
+}
