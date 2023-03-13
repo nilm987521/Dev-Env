@@ -11,7 +11,7 @@
 ## Windows 
 將容器變成WSL虛擬機。
 IDE不限於VSCode，但須安裝在WSL虛擬機內，透過XForwarding使用。
-> 1. Windows有無完成WSL的XForwarding效能問題。
+> 1. Windows有完成WSL的XForwarding效能問題。
 
 ## WSL的操作流程
 
@@ -40,12 +40,13 @@ wsl --import <wsl名稱> <虛擬機硬碟的存放位置> <dev-wsl.tar檔位置>
 ## VSCode的devcontainer使用方法
 
 1. 將此專案放置開發專案的.devcontainer資料夾內(示意圖如下)
-> 開發專案
-> ├ .devcontainer
-> │ ├ .sysinit  
-> │ ├ Dockerfile-CICD  
-> │ ├ Dockerfile-Dev  
-> │ ├ README.md  
-> │ └ devcontainer.json
-> ├ <Source Code> 
- 
+```
+ 開發專案
+ ├ .devcontainer
+ │ ├ .sysinit  
+ │ ├ Dockerfile-CICD  
+ │ ├ Dockerfile-Dev  
+ │ ├ README.md  
+ │ └ devcontainer.json
+ ├ <Source Code> 
+``` 
