@@ -50,3 +50,7 @@ wsl --import <wsl名稱> <虛擬機硬碟的存放位置> <dev-wsl.tar檔位置>
  │ └ devcontainer.json
  ├ <Source Code> 
 ``` 
+```bash
+cd <Project Folder>
+git clone https://github.com/nilm987521/Dev-Env .devcontainer
+```
