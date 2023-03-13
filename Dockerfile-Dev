@@ -35,7 +35,7 @@ export XMODIFIERS=@im=ibus\n\
 export QT_IM_MODULE=ibus\n\n\
 bash ~/.sysinit\n\
 bash ~/conn2db.sh\n\
-alias code=\"code --remote wsl+dev-wsl\"
+alias code=\"code --remote wsl+dev-wsl\
 " | tee -a /home/$USER/.userrc
 # 複製使用者的systemd啟動script
 COPY .sysinit /home/$USER/
