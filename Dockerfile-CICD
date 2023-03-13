@@ -11,7 +11,7 @@ ARG MVN_URL="https://dlcdn.apache.org/maven/maven-3/3.8.7/binaries/apache-maven-
 # 安裝必要套件
 RUN dnf install -yq epel-release yum-utils wget && \
     yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo && \
-    curl -sL https://rpm.nodesource.com/setup_14.x | bash - && \
+    curl -sL https://rpm.nodesource.com/setup_18.x | bash - && \
     dnf install -yq $PKG_LIST $ADD_PKG_LIST
 # 安裝專案指定JDK
 RUN mkdir jdk && \
