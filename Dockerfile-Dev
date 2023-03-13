@@ -2,7 +2,7 @@ FROM project-builder
 
 ARG USER=dev-user
 ARG PASSWORD=password
-ARG PKG_LIST="epel-release passwd openssh-server dnsutils telnet net-tools iproute zsh java-17-openjdk-devel vim procps gvim gedit ibus ibus-libzhuyin"
+ARG PKG_LIST="epel-release passwd openssh-server dnsutils telnet net-tools iproute zsh java-17-openjdk-devel vim procps gvim gedit ibus ibus-libzhuyin mesa-libGLU"
 ARG JAVA_OPTS="-Dfile.encoding=UTF-8"
 
 # 安裝必要套件
@@ -33,9 +33,11 @@ export LC_ALL=\"C.UTF-8\"\n\n\
 export GTK_IM_MODULE=ibus\n\
 export XMODIFIERS=@im=ibus\n\
 export QT_IM_MODULE=ibus\n\n\
+sudo chown -R \$(whoami):\$(whoami) /run/user/\$(id -u)/\n\
+ibus-daemon &\n\n\ 
 bash ~/.sysinit\n\
-bash ~/conn2db.sh\n\
-alias code=\"code --remote wsl+dev-wsl\
+alias code=\"code --remote wsl+dev-wsl\"\
 " | tee -a /home/$USER/.userrc
+RUN echo "source ~/.userrc" | tee -a ~/.bashrc
 # 複製使用者的systemd啟動script
 COPY .sysinit /home/$USER/
