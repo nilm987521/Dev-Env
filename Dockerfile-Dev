@@ -34,7 +34,7 @@ export GTK_IM_MODULE=ibus\n\
 export XMODIFIERS=@im=ibus\n\
 export QT_IM_MODULE=ibus\n\n\
 sudo chown -R \$(whoami):\$(whoami) /run/user/\$(id -u)/\n\
-ibus-daemon --xim &\n\n\ 
+[ -z "$( ps ux | grep ibus-daemon | grep -v grep)" ] && ibus-daemon --xim &\n\n\ 
 bash ~/.sysinit\n\
 alias code=\"code --remote wsl+dev-wsl\"\
 " | tee -a /home/$USER/.userrc
