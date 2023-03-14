@@ -33,10 +33,10 @@ export LC_ALL=\"C.UTF-8\"\n\n\
 export GTK_IM_MODULE=ibus\n\
 export XMODIFIERS=@im=ibus\n\
 export QT_IM_MODULE=ibus\n\n\
-sudo chown -R \$(whoami):\$(whoami) /run/user/\$(id -u)/\n\
-[ -z "$( ps ux | grep ibus-daemon | grep -v grep)" ] && ibus-daemon --xim &\n\n\ 
 bash ~/.sysinit\n\
-alias code=\"code --remote wsl+dev-wsl\"\
+sudo chown -R \$(whoami):\$(whoami) /run/user/\$(id -u)/\n\n\
+[ -z "$( ps ux | grep ibus-daemon | grep -v grep)" ] && dbus-launch ibus-daemon -drx\n\n\ 
+alias code=\"code --remote wsl+\$WSL_DISTRO_NAME\"\
 " | tee -a /home/$USER/.userrc
 RUN echo "source ~/.userrc" | tee -a ~/.bashrc
 # 複製使用者的systemd啟動script
