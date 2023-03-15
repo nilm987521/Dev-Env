@@ -2,7 +2,7 @@ FROM project-builder
 
 ARG USER=dev-user
 ARG PASSWORD=password
-ARG PKG_LIST="epel-release netcat passwd openssh-server dnsutils telnet net-tools iproute zsh java-17-openjdk-devel vim procps gvim gedit ibus ibus-libzhuyin mesa-libGLU xfce-polkit"
+ARG PKG_LIST="epel-release netcat tmux passwd unzip openssh-server dnsutils telnet net-tools iproute zsh java-17-openjdk-devel vim procps gvim gedit ibus ibus-libzhuyin mesa-libGLU"
 ARG JAVA_OPTS="-Dfile.encoding=UTF-8"
 
 # 安裝必要套件
@@ -21,7 +21,9 @@ RUN echo -e "[boot]\nsystemd = true\ncommand = ibus-daemon --xim" | sudo tee -a 
     sudo chmod +x /usr/bin/open || \
     exit 0
 # 下載中文字體
-RUN mkdir -p ~/.fonts && wget -P ~/.fonts https://github.com/notofonts/noto-cjk/blob/main/Sans/Mono/NotoSansMonoCJKtc-Regular.otf
+RUN mkdir -p ~/.fonts && \
+    wget -P ~/.fonts -O ~/.fonts/NotoSansTC.zip https://fonts.google.com/download?family=Noto%20Sans%20TC && \
+    unzip -d ~/.fonts ~/.fonts/NotoSansTC.zip
 # 設定通用開發環境，因配合WSL所以Dockerfile的ENV不能用
 RUN echo -e "\n\
 export MAVEN_CONFIG=\"/home/$USER/.m2\"\n\
