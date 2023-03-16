@@ -2,7 +2,7 @@ FROM project-builder
 
 ARG USER=dev-user
 ARG PASSWORD=password
-ARG PKG_LIST="epel-release netcat tmux passwd unzip openssh-server dnsutils telnet net-tools iproute zsh java-17-openjdk-devel vim procps gvim gedit ibus ibus-libzhuyin mesa-libGLU"
+ARG PKG_LIST="epel-release netcat tmux passwd unzip openssh-server dnsutils telnet net-tools iproute zsh java-17-openjdk-devel vim procps gvim gedit fcitx fcitx-chewing libglvnd-glx dbus-x11 mesa-libGLU"
 ARG JAVA_OPTS="-Dfile.encoding=UTF-8"
 
 # 安裝必要套件
@@ -10,16 +10,8 @@ RUN sudo dnf install -yq $PKG_LIST && sudo dnf clean all
 # 設定使用者密碼
 RUN echo -e "$PASSWORD\n$PASSWORD\n" | sudo passwd $USER
 # 設定wsl.conf
-RUN echo -e "[boot]\nsystemd = true\ncommand = ibus-daemon --xim" | sudo tee -a /etc/wsl.conf && \
-    echo -e "[user]\ndefault = $USER" | sudo tee -a /etc/wsl.conf && \ 
-    echo '#!/usr/bin/bash' | sudo tee -a /usr/bin/open && \
-    echo -e "\
-    ARG=\"./\"\n\
-    [[ \$@ != \"\" ]] && ARG=\$@\n\
-    powershell.exe ii \$ARG\n\
-    " | sudo tee -a /usr/bin/open && \
-    sudo chmod +x /usr/bin/open || \
-    exit 0
+RUN echo -e "[boot]\nsystemd = true" | sudo tee -a /etc/wsl.conf && \
+    echo -e "[user]\ndefault = $USER" | sudo tee -a /etc/wsl.conf 
 # 下載中文字體
 RUN mkdir -p ~/.fonts && \
     wget -P ~/.fonts -O ~/.fonts/NotoSansTC.zip https://fonts.google.com/download?family=Noto%20Sans%20TC && \
@@ -33,15 +25,15 @@ export TZ=\"Asia/Taipei\"\n\
 export JAVA_HOME=\"/opt/jdk\"\n\
 export PATH=\"\$JAVA_HOME/bin:/opt/mvn/bin:\$PATH\"\n\
 export LANG=\"zh_TW.UTF-8\"\n\
-export LC_ALL=\"C.UTF-8\"\n\n\
-export GTK_IM_MODULE=ibus\n\
-export XMODIFIERS=@im=ibus\n\
-export QT_IM_MODULE=ibus\n\n\
-bash ~/.sysinit\n\
-sudo chown -R \$(whoami):\$(whoami) /run/user/\$(id -u)/\n\n\
-[ -z "$( ps ux | grep ibus-daemon | grep -v grep)" ] && dbus-launch ibus-daemon -drx\n\n\ 
-alias code=\"code --remote wsl+\$WSL_DISTRO_NAME\"\
+export LC_ALL=\"zh_TW.UTF-8\"\n\n\
+export GTK_IM_MODULE=fcitx\n\
+export XMODIFIERS=@im=fcitx\n\
+export QT_IM_MODULE=fcitx\n\n\
+eval \$(dbus-launch --sh-syntax)\n\
+dbus-launch fcitx -dr\n\
+if [[ -z \"\$TMUX\" ]] && [[ -z \"\$VSCODE_INJECTION\" ]]\nthen\n\
+    tmux attach-session -t \$USER || tmux new-session -s \$USER\n\
+fi\
 " | tee -a /home/$USER/.userrc
-RUN echo "source ~/.userrc" | tee -a ~/.bashrc
-# 複製使用者的systemd啟動script
-COPY .sysinit /home/$USER/
+RUN echo "source ~/.userrc" | tee -a ~/.bashrc | tee -a ~/.zshrc
+RUN tmux new -s $USER -d

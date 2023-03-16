@@ -1,5 +1,5 @@
 # 此Image為CICD時用的編譯環境
-FROM docker.io/rockylinux:8.6
+FROM docker.io/rockylinux:8.7
 
 # 設定參數，可以在執行docker build時透過--build-arg改變
 ARG USER="dev-user"
