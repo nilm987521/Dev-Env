@@ -12,19 +12,23 @@
 將容器變成WSL虛擬機。
 IDE不限於VSCode，但須安裝在WSL虛擬機內，透過XForwarding使用。
 > 1. Windows有完成WSL的XForwarding效能問題。
+> 2. 不可以用Moba，依樣會有效能問題。
 
 ## WSL的操作流程
 
-0. 抓最新的編譯環境Image
+0. 抓最新的編譯環境Image，或自行build
+```bash
+docker build -t project-builder -f Dockerfile-CICD
+```
 
 1. 執行指令，建立Image
 ```bash
-docker build -t dev-env .
+docker build -t dev-wsl -f Dockerfile-Dev .
 ```
 
 2. 用建立好的Image，產生容器
 ```bash
-docker run -d --name dev-wsl dev-wsl
+docker create --name dev-wsl dev-wsl
 ```
 
 3. 將容器輸出成tar檔
@@ -43,9 +47,8 @@ wsl --import <wsl名稱> <虛擬機硬碟的存放位置> <dev-wsl.tar檔位置>
 ```
  開發專案
  ├ .devcontainer
- │ ├ .sysinit  
- │ ├ Dockerfile-CICD  
- │ ├ Dockerfile-Dev  
+ │ ├ Dockerfile-CICD # 可以替換成各專案的測試環境 
+ │ ├ Dockerfile-Dev 
  │ ├ README.md  
  │ └ devcontainer.json
  ├ <Source Code> 

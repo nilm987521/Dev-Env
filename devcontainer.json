@@ -1,7 +1,7 @@
 {
 	"name": "My Dev Environment",
 	"build": {
-		"dockerfile": "Dockerfile-Dev"
+		"dockerfile": "Dockerfile-CICD"
 	},
 	"mounts": [
 		"type=volume,src=m2,target=/home/dev-user/.m2",
