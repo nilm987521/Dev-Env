@@ -2,7 +2,7 @@ FROM project-builder
 
 ARG USER=dev-user
 ARG PASSWORD=password
-ARG PKG_LIST="epel-release netcat tmux passwd unzip openssh-server dnsutils telnet net-tools iproute zsh java-17-openjdk-devel vim procps gvim gedit fcitx fcitx-chewing libglvnd-glx dbus-x11 mesa-libGLU"
+ARG PKG_LIST="epel-release netcat tmux passwd unzip openssh-server dnsutils telnet net-tools iproute zsh java-17-openjdk-devel vim procps gvim gedit fcitx fcitx-chewing libglvnd-glx dbus-x11 mesa-libGLU man-pages"
 ARG JAVA_OPTS="-Dfile.encoding=UTF-8"
 
 # 安裝必要套件
