@@ -30,7 +30,7 @@ export GTK_IM_MODULE=fcitx\n\
 export XMODIFIERS=@im=fcitx\n\
 export QT_IM_MODULE=fcitx\n\n\
 eval \$(dbus-launch --sh-syntax)\n\
-dbus-launch fcitx -dr\n\
+dbus-launch fcitx -dr 1>/dev/null 2>/dev/null\n\
 if [[ -z \"\$TMUX\" ]] && [[ -z \"\$VSCODE_INJECTION\" ]]\nthen\n\
     tmux attach-session -t \$USER || tmux new-session -s \$USER\n\
 fi\
