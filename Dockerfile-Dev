@@ -2,7 +2,7 @@ FROM project-builder
 
 ARG USER=dev-user
 ARG PASSWORD=password
-ARG PKG_LIST="epel-release netcat tmux passwd unzip openssh-server dnsutils telnet net-tools iproute zsh java-17-openjdk-devel vim procps gvim gedit fcitx fcitx-chewing libglvnd-glx dbus-x11 mesa-libGLU man-pages"
+ARG PKG_LIST="epel-release netcat tmux passwd unzip openssh-server dnsutils telnet net-tools iproute zsh java-17-openjdk-devel vim procps gvim gedit fcitx fcitx-chewing libglvnd-glx dbus-x11  mesa-libGLU-devel man-pages"
 ARG JAVA_OPTS="-Dfile.encoding=UTF-8"
 
 # 安裝必要套件
@@ -30,10 +30,12 @@ export GTK_IM_MODULE=fcitx\n\
 export XMODIFIERS=@im=fcitx\n\
 export QT_IM_MODULE=fcitx\n\n\
 eval \$(dbus-launch --sh-syntax)\n\
-dbus-launch fcitx -dr 1>/dev/null 2>/dev/null\n\
 if [[ -z \"\$TMUX\" ]] && [[ -z \"\$VSCODE_INJECTION\" ]]\nthen\n\
     tmux attach-session -t \$USER || tmux new-session -s \$USER\n\
-fi\
+fi\n\
+if [[ -n \"\$TMUX\" ]]\nthen\n\ 
+    dbus-launch fcitx -dr &>/dev/null\n\
+fi\n\
 " | tee -a /home/$USER/.userrc
 RUN echo "source ~/.userrc" | tee -a ~/.bashrc | tee -a ~/.zshrc
 RUN tmux new -s $USER -d
