@@ -2,16 +2,17 @@
 FROM docker.io/rockylinux:8.7
 
 # 設定參數，可以在執行docker build時透過--build-arg改變
+ARG NODE_VERSION="14" // Node的大版號
+ARG JDK_URL="https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u352-b08/OpenJDK8U-jdk_x64_linux_hotspot_8u352b08.tar.gz"
+ARG MVN_URL="https://dlcdn.apache.org/maven/maven-3/3.8.8/binaries/apache-maven-3.8.8-bin.tar.gz"
 ARG USER="dev-user"
 ARG PKG_LIST="sudo nodejs jq git xz docker-ce docker-ce-cli containerd.io docker-compose-plugin glibc-langpack-zh findutils freetype-devel fontconfig-devel"
 ARG JAVA_OPTS="-Dfile.encoding=UTF-8"
-ARG JDK_URL="https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u352-b08/OpenJDK8U-jdk_x64_linux_hotspot_8u352b08.tar.gz"
-ARG MVN_URL="https://dlcdn.apache.org/maven/maven-3/3.8.8/binaries/apache-maven-3.8.8-bin.tar.gz"
 
 # 安裝必要套件
 RUN dnf install -yq epel-release yum-utils wget && \
     yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo && \
-    curl -sL https://rpm.nodesource.com/setup_14.x | bash - && \
+    curl -sL https://rpm.nodesource.com/setup_$NODE_VERSION.x | bash - && \
     dnf install -yq $PKG_LIST $ADD_PKG_LIST
 # 安裝專案指定JDK
 RUN mkdir jdk && \
