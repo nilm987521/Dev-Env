@@ -1,25 +1,23 @@
 # 此Image為CICD時用的編譯環境
-FROM docker.io/rockylinux:8.7
+FROM docker.io/rockylinux:9
 
 # 設定參數，可以在執行docker build時透過--build-arg改變
-ARG NODE_VERSION="14" // Node的大版號
 ARG JDK_URL="https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u352-b08/OpenJDK8U-jdk_x64_linux_hotspot_8u352b08.tar.gz"
+ARG NODE_URL="https://nodejs.org/dist/v18.16.0/node-v18.16.0-linux-x64.tar.xz"
 ARG MVN_URL="https://dlcdn.apache.org/maven/maven-3/3.8.8/binaries/apache-maven-3.8.8-bin.tar.gz"
 ARG USER="dev-user"
-ARG PKG_LIST="sudo nodejs jq git xz docker-ce docker-ce-cli containerd.io docker-compose-plugin glibc-langpack-zh findutils freetype-devel fontconfig-devel"
+ARG PKG_LIST="sudo jq git xz glibc-langpack-zh findutils freetype-devel fontconfig-devel"
 ARG JAVA_OPTS="-Dfile.encoding=UTF-8"
 
 # 安裝必要套件
 RUN dnf install -yq epel-release yum-utils wget && \
-    yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo && \
-    curl -sL https://rpm.nodesource.com/setup_$NODE_VERSION.x | bash - && \
     dnf install -yq $PKG_LIST $ADD_PKG_LIST
 # 安裝專案指定JDK
 RUN mkdir jdk && \
     [[ "$JDK_URL" == *tar.gz ]] && \
     wget -c $JDK_URL -O - | tar xz -C jdk --strip-components=1 || \
     [[ "$JDK_URL" == *tar.xz ]] && \
-    wget -c $JDK_URL -O - | tar xj -C jdk --strip-components=1 || \
+    wget -c $JDK_URL -O - | tar xJ -C jdk --strip-components=1 || \
     exit 0
 RUN mv jdk /opt/jdk
 # 安裝專案指定MVN
@@ -27,16 +25,19 @@ RUN mkdir mvn && \
     [[ "$MVN_URL" == *tar.gz ]] && \
     wget -c $MVN_URL -O - | tar xz -C mvn --strip-components=1 || \
     [[ "$MVN_URL" == *tar.xz ]] && \
-    wget -c $MVN_URL -O - | tar xj -C mvn --strip-components=1 || \
+    wget -c $MVN_URL -O - | tar xJ -C mvn --strip-components=1 || \
     exit 0
 RUN mv mvn /opt/mvn
+# 安裝專案指定NODE
+RUN mkdir node && \
+    wget -c $NODE_URL -O - | tar xJ -C node --strip-components=1
+RUN mv node /opt/node
 # 設定sudo
 RUN echo "$USER ALL=(ALL:ALL) NOPASSWD:ALL" | \
     tee -a /etc/sudoers.d/$USER && \
     chmod 0440 /etc/sudoers.d/$USER
 # 新增使用者
-RUN useradd -m $USER && \
-    usermod -aG docker $USER
+RUN useradd -m $USER
 
 USER $USER
 RUN mkdir -p /home/$USER/.m2
@@ -46,6 +47,6 @@ ENV MAVEN_CONFIG="/home/$USER/.m2"
 ENV JAVA_TOOL_OPTIONS="$JAVA_OPTS"
 ENV TZ="Asia/Taipei"
 ENV JAVA_HOME="/opt/jdk"
-ENV PATH="$JAVA_HOME/bin:/opt/mvn/bin:$PATH"
+ENV PATH="$JAVA_HOME/bin:/opt/mvn/bin:/opt/node/bin:$PATH"
 ENV LANG="en_US.UTF-8"
 ENV LC_ALL="C.UTF-8"
